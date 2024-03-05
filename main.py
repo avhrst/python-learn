@@ -1,70 +1,60 @@
-from pydantic import BaseModel
 from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
+import datetime
+import Db as db
 
 app = FastAPI()
-
-
-my_tasks = []
-
-class Task(BaseModel):
-    id: int
-    title: str
-    description: str
-    
-def get_id():
-    return my_tasks[-1].id + 1 if my_tasks else 1
- 
-def create_tasks(task: Task):
-    task.id = get_id()
-    my_tasks.append(task)
-    return task 
-
-def get_tasks():
-    return my_tasks
-
-def get_task_by_id(id: int):
-    for task in my_tasks:
-        if task.id == id:
-            return task
-    return None
-
-def update_tasks(id: int, task: Task):
-    for i, n in enumerate(my_tasks):
-        if n.id == id:
-            my_tasks[i] = task
-            return task
-    return None 
- 
-def delete_tasks(id: int):
-    for i, task in enumerate(my_tasks):
-        if task.id == id:
-            my_tasks.pop(i)
-            return 1
-    return None
  
 @app.get("/", include_in_schema=False)
 def redirect_to_docs():
     return RedirectResponse(url="/docs")
 
-@app.get("/tasks")
-def read_tasks():
-    return get_tasks()
+## POST
+@app.post("/expense")
+def create_expense(title: str, amount: float, date: datetime, category: str, description: str):
+    return db.add_expense(title, amount, date, category, description)      
 
-@app.post("/tasks")
-def create_task(task: Task):
-    return create_tasks(task)
+@app.post("/income")
+def create_income(title: str, amount: float, date: datetime, category: str, description: str):
+    return db.add_income(title, amount, date, category, description)
 
-@app.get("/tasks/{id}")
-def read_task(id: int):
-    return get_task_by_id(id)
+## PUT
+@app.put("/expense/{id}")
+def update_expense(id: int, amount: float, date: datetime, category: str, description: str):
+    return db.change_expense_journal_amount(id, amount, date, category, description)
 
-@app.put("/tasks/{id}")
-def update_task(id: int, task: Task):
-    return update_tasks(id, task)
+@app.put("/income/{id}")
+def update_income(id: int, amount: float, date: datetime, category: str, description: str):
+    return db.change_income_journal_amount(id, amount, date, category, description)
 
-@app.delete("/tasks/{id}")
-def delete_task(id: int):
-    return delete_tasks(id)
+## DELETE
+@app.delete("/expense/{id}")
+def delete_expense(id: int):
+    return db.delete_expense_journal(id)
+
+@app.delete("/income/{id}")
+def delete_income(id: int):
+    return db.delete_income_journal(id)
+
+@app.delete("/clear")
+def clear_balance():
+    return db.clear_balance()
+
+## GET
+@app.get("/balance")
+def get_balance():
+    return db.get_balance()
+
+@app.get("/journal/categories/{category}")
+def get_journal_by_category(category: str):
+    return db.get_journal_by_category(category)
+
+@app.get("/statistics/income/{category}/{start_date}/{end_date}")
+def get_income_by_category_and_period(category: str, start_date: datetime, end_date: datetime):
+    return db.get_income_by_category_and_period(category, start_date, end_date)
+
+@app.get("/statistics/expense/{category}/{start_date}/{end_date}")
+def get_expense_by_category_and_period(category: str, start_date: datetime, end_date: datetime):
+    return db.get_expense_by_category_and_period(category, start_date, end_date)
 
 
