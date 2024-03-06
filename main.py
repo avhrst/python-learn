@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
 from typing import Union
-from datetime import datetime
+from datetime import date
 import Db as db
 
 
@@ -22,12 +22,12 @@ def create_income(income: str, amount: float, category: str, description: str):
 
 ## PUT
 @app.put("/expense/{id}")
-def update_expense(id: int, amount: float, date: Union[datetime, None], category: str, description: str):
-    return db.change_expense_journal_amount(id, amount, date, category, description)
+def update_expense(id: int, amount: float, category: str, description: str):
+    return db.change_expense_journal_amount(id, amount, category, description)
 
 @app.put("/income/{id}")
-def update_income(id: int, amount: float, date: Union[datetime, None], category: str, description: str):
-    return db.change_income_journal_amount(id, amount, date, category, description)
+def update_income(id: int, amount: float, category: str, description: str):
+    return db.change_income_journal_amount(id, amount, category, description)
 
 ## DELETE
 @app.delete("/expense/{id}")
@@ -52,11 +52,11 @@ def get_journal_by_category(category: str):
     return db.get_journal_by_category(category)
 
 @app.get("/statistics/income/{category}/{start_date}/{end_date}")
-def get_income_by_category_and_period(category: str, start_date: datetime, end_date: datetime):
+def get_income_by_category_and_period(category: str, start_date: Union[date, None], end_date: Union[date, None]):
     return db.get_income_by_category_and_period(category, start_date, end_date)
 
 @app.get("/statistics/expense/{category}/{start_date}/{end_date}")
-def get_expense_by_category_and_period(category: str, start_date: datetime, end_date: datetime):
+def get_expense_by_category_and_period(category: str, start_date: Union[date, None], end_date: Union[date, None]):
     return db.get_expense_by_category_and_period(category, start_date, end_date)
 
 

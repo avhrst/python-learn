@@ -1,0 +1,391 @@
+{
+	"info": {
+		"_postman_id": "1c3ed6cb-0893-45ed-89f0-5aa437843acc",
+		"name": "nodule-1",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "1531684"
+	},
+	"item": [
+		{
+			"name": "Expence",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8000/expense?expence=Food&amount=100&category=Personal&description=Operation 1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"expense"
+					],
+					"query": [
+						{
+							"key": "expence",
+							"value": "Food"
+						},
+						{
+							"key": "amount",
+							"value": "100"
+						},
+						{
+							"key": "category",
+							"value": "Personal"
+						},
+						{
+							"key": "description",
+							"value": "Operation 1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Income",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/income?income=Salary&amount=100&category=Personal&description=Operation 1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"income"
+					],
+					"query": [
+						{
+							"key": "income",
+							"value": "Salary"
+						},
+						{
+							"key": "amount",
+							"value": "100"
+						},
+						{
+							"key": "category",
+							"value": "Personal"
+						},
+						{
+							"key": "description",
+							"value": "Operation 1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Expence",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/expense/:id?amount=200&category=Personal&description=Operation 1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"expense",
+						":id"
+					],
+					"query": [
+						{
+							"key": "amount",
+							"value": "200"
+						},
+						{
+							"key": "category",
+							"value": "Personal"
+						},
+						{
+							"key": "description",
+							"value": "Operation 1"
+						},
+						{
+							"key": "date",
+							"value": "2024-01-01",
+							"disabled": true
+						}
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Income",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/income/:id?amount=500&category=Personal&description=Operation 1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"income",
+						":id"
+					],
+					"query": [
+						{
+							"key": "amount",
+							"value": "500"
+						},
+						{
+							"key": "category",
+							"value": "Personal"
+						},
+						{
+							"key": "description",
+							"value": "Operation 1"
+						},
+						{
+							"key": "date",
+							"value": "2024-01-01",
+							"disabled": true
+						}
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Balance",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/balance",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"balance"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Journ-Category",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/journal/categories/:category",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"journal",
+						"categories",
+						":category"
+					],
+					"variable": [
+						{
+							"key": "category",
+							"value": "Personal"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Stat-income-Category",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/statistics/income/:category/:start_date/:end_date",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"statistics",
+						"income",
+						":category",
+						":start_date",
+						":end_date"
+					],
+					"variable": [
+						{
+							"key": "category",
+							"value": "Personal"
+						},
+						{
+							"key": "start_date",
+							"value": "2024-03-06"
+						},
+						{
+							"key": "end_date",
+							"value": "2024-03-06"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Stat-expence-Category",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/statistics/expense/:category/:start_date/:end_date",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"statistics",
+						"expense",
+						":category",
+						":start_date",
+						":end_date"
+					],
+					"variable": [
+						{
+							"key": "category",
+							"value": "Personal"
+						},
+						{
+							"key": "start_date",
+							"value": "2024-03-06"
+						},
+						{
+							"key": "end_date",
+							"value": "2024-03-06"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Expense",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/expense/:id",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"expense",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Income",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/income/:id",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"income",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "clear",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/clear",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"clear"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Balance",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/balance",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"balance"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

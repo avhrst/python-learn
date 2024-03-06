@@ -1,6 +1,5 @@
 ## DB imitating module
 from datetime import date
-from datetime import datetime
 
 category = set()
 expense = set()
@@ -38,11 +37,11 @@ class IncomeJournal():
     _id: int
     _incone = Income
     _amount: float
-    _date: datetime
+    _date: date
     _category: Category 
     _description: str
     
-    def __init__(self,income:Income, amount: float, date: datetime, category: Category, description: str):
+    def __init__(self,income:Income, amount: float, date: date, category: Category, description: str):
         self._id = max_id(income_journal) + 1
         self._incone = income
         self._amount = amount
@@ -60,11 +59,11 @@ class ExpenseJournal():
     _id: int
     _expence = Expense
     _amount: float
-    _date: datetime
+    _date: date
     _category: Category
     _description: str
     
-    def __init__(self, expense: Expense, amount: float, date: datetime, category: Category, description: str):
+    def __init__(self, expense: Expense, amount: float, date: date, category: Category, description: str):
         self._id = max_id(expense_journal) + 1
         self._expence = expense
         self._amount = amount
@@ -122,12 +121,12 @@ def add_income(title: str):
         income.add(i)
     return i
 
-def add_income_journal(income: Income, amount: float, date: datetime, category: Category, description: str):
+def add_income_journal(income: Income, amount: float, date: date, category: Category, description: str):
     ij = IncomeJournal(income, amount, date, category, description)
     income_journal.add(ij)
     return ij
 
-def add_expense_journal(expense: Expense,amount: float, date: datetime, category: Category, description: str):
+def add_expense_journal(expense: Expense,amount: float, date: date, category: Category, description: str):
     ej = ExpenseJournal(expense, amount, date, category, description)
     expense_journal.add(ej)
     return ej
@@ -218,7 +217,7 @@ def update_income(id: int, title: str):
         return i
     return None
 
-def update_income_journal(id: int, income: Income, amount: float, date: datetime, category: Category, description: str):
+def update_income_journal(id: int, income: Income, amount: float, date: date, category: Category, description: str):
     ij = get_income_journal_by_id(id)
     if ij:
         ij._income = income
@@ -229,7 +228,7 @@ def update_income_journal(id: int, income: Income, amount: float, date: datetime
         return ij
     return None
 
-def update_expense_journal(id: int, expense: Expense, amount: float, date: datetime, category: Category, description: str):
+def update_expense_journal(id: int, expense: Expense, amount: float, date: date, category: Category, description: str):
     ej = get_expense_journal_by_id(id)
     if ej:
         ej._expense = expense
@@ -251,25 +250,39 @@ def get_sum_of_expenses_by_category(category: Category):
 def get_sum_of_incomes_by_category(category: Category):
     return sum([ij._amount for ij in income_journal if ij._category == category])
 
-def get_sum_of_expenses_by_category_and_period(category: Category, start_date: datetime, end_date: datetime):
+def get_sum_of_expenses_by_category_and_period(category: Category, start_date: date, end_date: date):
     return sum([ej._amount for ej in expense_journal if ej._category == category and ej._date >= start_date and ej._date <= end_date])
-def get_sum_of_incomes_by_category_and_period(category: Category, start_date: datetime, end_date: datetime):
+def get_sum_of_incomes_by_category_and_period(category: Category, start_date: date, end_date: date):
     return sum([ij._amount for ij in income_journal if ij._category == category and ij._date >= start_date and ij._date <= end_date])
     
-def get_max_expense_by_category_and_period(category: Category, start_date: datetime, end_date: datetime):
-    return max([ej._amount for ej in expense_journal if ej._category == category and ej._date >= start_date and ej._date <= end_date])  
+def get_max_expense_by_category_and_period(category: Category, start_date: date, end_date: date):
+    try:
+        return max([ej._amount for ej in expense_journal if ej._category == category and ej._date >= start_date and ej._date <= end_date])  
+    except:
+        return 0
+    
+def get_max_income_by_category_and_period(category: Category, start_date: date, end_date: date):
+    try:
+        return max([ij._amount for ij in income_journal if ij._category == category and ij._date >= start_date and ij._date <= end_date])   
+    except:
+        return 0
+    
+def get_min_expense_by_category_and_period(category: Category, start_date: date, end_date: date):
+    try:
+        return min([ej._amount for ej in expense_journal if ej._category == category and ej._date >= start_date and ej._date <= end_date])
+    except:
+        return 0
 
-def get_max_income_by_category_and_period(category: Category, start_date: datetime, end_date: datetime):
-    return max([ij._amount for ij in income_journal if ij._category == category and ij._date >= start_date and ij._date <= end_date])   
-
-def get_min_expense_by_category_and_period(category: Category, start_date: datetime, end_date: datetime):
-    return min([ej._amount for ej in expense_journal if ej._category == category and ej._date >= start_date and ej._date <= end_date])
-def get_min_income_by_category_and_period(category: Category, start_date: datetime, end_date: datetime):
-    return min([ij._amount for ij in income_journal if ij._category == category and ij._date >= start_date and ij._date <= end_date])
-
-def get_average_expense_by_category_and_period(category: Category, start_date: datetime, end_date: datetime):
+def get_min_income_by_category_and_period(category: Category, start_date: date, end_date: date):
+    try:
+        return min([ij._amount for ij in income_journal if ij._category == category and ij._date >= start_date and ij._date <= end_date])
+    except:
+        return 0
+    
+def get_average_expense_by_category_and_period(category: Category, start_date: date, end_date: date):
     return sum([ej._amount for ej in expense_journal if ej._category == category and ej._date >= start_date and ej._date <= end_date]) / len([ej._amount for ej in expense_journal if ej._category == category and ej._date >= start_date and ej._date <= end_date])    
-def get_average_income_by_category_and_period(category: Category, start_date: datetime, end_date: datetime):
+    
+def get_average_income_by_category_and_period(category: Category, start_date: date, end_date: date):
     return sum([ij._amount for ij in income_journal if ij._category == category and ij._date >= start_date and ij._date <= end_date]) / len([ij._amount for ij in income_journal if ij._category == category and ij._date >= start_date and ij._date <= end_date])
 
 ## clear data     
@@ -343,7 +356,7 @@ def get_journal_by_category(in_category: str):
     d = {"expense": ex, "income": inc}
     return d
     
-def get_income_by_category_and_period(in_category: str, start: datetime, end: datetime):
+def get_income_by_category_and_period(in_category: str, start: date, end: date):
     c = get_by_title(in_category,category)
     i_sum = get_sum_of_incomes_by_category_and_period(c, start, end)
     i_min = get_min_income_by_category_and_period(c, start, end)
@@ -352,7 +365,7 @@ def get_income_by_category_and_period(in_category: str, start: datetime, end: da
     d = {"sum": i_sum, "min": i_min, "max": i_max, "avg": i_avg}    
     return d
     
-def get_expense_by_category_and_period(in_category: str, start: datetime, end: datetime):
+def get_expense_by_category_and_period(in_category: str, start: date, end: date):
     c = get_by_title(in_category,category)
     e_sum = get_sum_of_expenses_by_category_and_period(c, start, end)
     e_min = get_min_expense_by_category_and_period(c, start, end)
