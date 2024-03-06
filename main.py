@@ -1,7 +1,9 @@
 from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
-import datetime
+from typing import Union
+from datetime import datetime
 import Db as db
+
 
 app = FastAPI()
  
@@ -11,20 +13,20 @@ def redirect_to_docs():
 
 ## POST
 @app.post("/expense")
-def create_expense(title: str, amount: float, date: datetime, category: str, description: str):
-    return db.add_expense(title, amount, date, category, description)      
+def create_expense(expence: str, amount: float, category: str, description: str):
+    return db.add_expenses(expence, amount, category, description)      
 
 @app.post("/income")
-def create_income(title: str, amount: float, date: datetime, category: str, description: str):
-    return db.add_income(title, amount, date, category, description)
+def create_income(income: str, amount: float, category: str, description: str):
+    return db.add_incomes(income, amount, category, description)
 
 ## PUT
 @app.put("/expense/{id}")
-def update_expense(id: int, amount: float, date: datetime, category: str, description: str):
+def update_expense(id: int, amount: float, date: Union[datetime, None], category: str, description: str):
     return db.change_expense_journal_amount(id, amount, date, category, description)
 
 @app.put("/income/{id}")
-def update_income(id: int, amount: float, date: datetime, category: str, description: str):
+def update_income(id: int, amount: float, date: Union[datetime, None], category: str, description: str):
     return db.change_income_journal_amount(id, amount, date, category, description)
 
 ## DELETE

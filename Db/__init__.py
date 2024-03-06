@@ -1,5 +1,7 @@
 ## DB imitating module
-import datetime
+from datetime import date
+from datetime import datetime
+
 category = set()
 expense = set()
 income = set()
@@ -12,7 +14,7 @@ class Category():
     _title: str
     
     def __init__(self, title: str):
-        self._id = category_max_id() + 1
+        self._id = max_id(category) + 1
         self._title = title
         
     
@@ -21,7 +23,7 @@ class Expense():
     _title: str
     
     def __init__(self, title: str):
-        self._id = expense_max_id() + 1
+        self._id = max_id(expense) + 1
         self._title = title
     
 class Income():
@@ -29,18 +31,20 @@ class Income():
     _title: str
     
     def __init__(self, title: str):
-        self._id = income_max_id() + 1
+        self._id = max_id(income) + 1
         self._title = title
  
 class IncomeJournal():
     _id: int
+    _incone = Income
     _amount: float
     _date: datetime
     _category: Category 
     _description: str
     
-    def __init__(self, amount: float, date: datetime, category: Category, description: str):
-        self._id = income_journal_max_id() + 1
+    def __init__(self,income:Income, amount: float, date: datetime, category: Category, description: str):
+        self._id = max_id(income_journal) + 1
+        self._incone = income
         self._amount = amount
         self._date = date
         self._category = category
@@ -54,13 +58,15 @@ def amount(self):
 
 class ExpenseJournal():
     _id: int
+    _expence = Expense
     _amount: float
     _date: datetime
     _category: Category
     _description: str
     
-    def __init__(self, amount: float, date: datetime, category: Category, description: str):
-        self._id = expense_journal_max_id() + 1
+    def __init__(self, expense: Expense, amount: float, date: datetime, category: Category, description: str):
+        self._id = max_id(expense_journal) + 1
+        self._expence = expense
         self._amount = amount
         self._date = date
         self._category = category
@@ -74,27 +80,23 @@ class ExpenseJournal():
     
 
 # sequences 
-def category_max_id():
-    return max([c._id for c in category])
-def expense_max_id():
-    return max([e.id for e in expense])
-def income_max_id():
-    return max([i.id for i in income])
-def income_journal_max_id():
-    return max([ij.id for ij in income_journal])
-def expense_journal_max_id():
-    return max([ej.id for ej in expense_journal])
+def max_id(entity: set):
+    try:
+        return max([c._id for c in entity])
+    except:
+        return 0
+    
 
 # entity operations
 
-def get_category_by_title(title: str):
-    for c in category:
+def get_by_title(title: str, entity: set):
+    for c in entity:
         if c._title == title:
             return c
     return None
 
 def add_category(title: str):    
-    c = get_category_by_title(title) 
+    c = get_by_title(title, category) 
     if c:
         return c
     else:
@@ -102,14 +104,8 @@ def add_category(title: str):
         category.add(c)
     return c
 
-def get_expence_by_title(title: str):
-    for e in expense:
-        if e._title == title:
-            return e
-    return None
-
 def add_expense(title: str):
-    e = get_expence_by_title(title)
+    e = get_by_title(title, expense)
     if e:
         return e
     else:   
@@ -117,14 +113,8 @@ def add_expense(title: str):
         expense.add(e)
     return e
 
-def get_income_by_title(title: str):
-    for i in income:
-        if i._title == title:
-            return i
-    return None
-
 def add_income(title: str):
-    i = get_income_by_title(title)
+    i = get_by_title(title, income)
     if i:
         return i
     else:
@@ -132,13 +122,13 @@ def add_income(title: str):
         income.add(i)
     return i
 
-def add_income_journal(amount: float, date: datetime, category: Category, description: str):
-    ij = IncomeJournal(amount, date, category, description)
+def add_income_journal(income: Income, amount: float, date: datetime, category: Category, description: str):
+    ij = IncomeJournal(income, amount, date, category, description)
     income_journal.add(ij)
     return ij
 
-def add_expense_journal(amount: float, date: datetime, category: Category, description: str):
-    ej = ExpenseJournal(amount, date, category, description)
+def add_expense_journal(expense: Expense,amount: float, date: datetime, category: Category, description: str):
+    ej = ExpenseJournal(expense, amount, date, category, description)
     expense_journal.add(ej)
     return ej
 
@@ -228,9 +218,10 @@ def update_income(id: int, title: str):
         return i
     return None
 
-def update_income_journal(id: int, amount: float, date: datetime, category: Category, description: str):
+def update_income_journal(id: int, income: Income, amount: float, date: datetime, category: Category, description: str):
     ij = get_income_journal_by_id(id)
     if ij:
+        ij._income = income
         ij._amount = amount
         ij._date = date
         ij._category = category
@@ -238,9 +229,10 @@ def update_income_journal(id: int, amount: float, date: datetime, category: Cate
         return ij
     return None
 
-def update_expense_journal(id: int, amount: float, date: datetime, category: Category, description: str):
+def update_expense_journal(id: int, expense: Expense, amount: float, date: datetime, category: Category, description: str):
     ej = get_expense_journal_by_id(id)
     if ej:
+        ej._expense = expense
         ej._amount = amount
         ej._date = date
         ej._category = category
@@ -287,84 +279,85 @@ def delete_all_incomes():
     income_journal.clear()
         
     
-    ## Bussines operations
-    def add_income(title: str, amount: float, date: datetime, category: Category, description: str):
-        i = Income(title)
-        add_income(i)
-        ij = IncomeJournal(amount, date, category, description)
-        add_income_journal(ij)
-        return ij
+    ## REST API operations
+def add_incomes(income: str, amount: float, category: str, description: str):
+    i = add_income(income)
+    c = add_category(category)
+    ij = add_income_journal(i, amount, date.today(), c, description)
+    return ij
     
-    def add_expense(title: str, amount: float, date: datetime, category: Category, description: str):
-        e = Expense(title)
-        add_expense(e)
-        ej = ExpenseJournal(amount, date, category, description)
-        add_expense_journal(ej)
+def add_expenses(expence: str, amount: float, category: str, description: str):
+    e =  add_expense(expence)
+    c = add_category(category)
+    ej = add_expense_journal(e, amount, date.today(), c, description)
+    return ej
+    
+def change_expense_journal_amount(id: int, amount: float, in_category: str, description: str):
+    ej = get_expense_journal_by_id(id)
+    if ej:
+        ej._amount = amount
+        ej._date = date.today()
+        ej._category = get_by_title(in_category,category)
+        ej._description = description
         return ej
-    
-    def change_expense_journal_amount(id: int, amount: float, date: datetime, category: str, description: str):
-        ej = get_expense_journal_by_id(id)
-        if ej:
-            ej._amount = amount
-            ej._date = date
-            ej._category = get_category_by_title(category)
-            ej._description = description
-            return ej
-        return None
+    return None
 
-    def change_income_journal_amount(id: int, amount: float, date: datetime, category: str, description: str):
-        ij = get_income_journal_by_id(id)
-        if ij:
-            ij._amount = amount
-            ij._date = date
-            ij._category = get_category_by_title(category)
-            ij._description = description
-            return ij
-        return None
+def change_income_journal_amount(id: int, amount: float, in_category: str, description: str):
+    ij = get_income_journal_by_id(id)
+    if ij:
+        ij._amount = amount
+        ij._date = date.today()
+        ij._category = get_by_title(in_category,category)
+        ij._description = description
+        return ij
+    return None
 
-    def delete_expense_journal(id: int):
-        ej = get_expense_journal_by_id(id)
-        if ej:
-            delete_expense_journal(ej)
-            return True
-        return False
-    
-    def delete_income_journal(id: int):
-        ij = get_income_journal_by_id(id)
-        if ij:
-            delete_income_journal(ij)
-            return True
-        return False
-    
-    def get_balance():
-        income = get_sum_of_incomes()
-        expense = get_sum_of_expenses()
-        return income - expense
-    
-    def clear_balance():
-        delete_all_incomes()
-        delete_all_expenses()       
+def delete_expense_journal(id: int):
+    ej = get_expense_journal_by_id(id)
+    if ej:
+        delete_expense_journal(ej)
         return True
+    return False
     
-    def get_journal_by_category(category: str):
-        ex = get_sum_of_expenses_by_category(category)
-        inc = get_sum_of_incomes_by_category(category)
-        d = {"expense": ex, "income": inc}
-        return d
+def delete_income_journal(id: int):
+    ij = get_income_journal_by_id(id)
+    if ij:
+        delete_income_journal(ij)
+        return True
+    return False
     
-    def get_income_by_category_and_period(category: str, start: datetime, end: datetime):
-        i_sum = get_sum_of_incomes_by_category_and_period(category, start, end)
-        i_min = get_min_income_by_category_and_period(category, start, end)
-        i_max = get_max_income_by_category_and_period(category, start, end)
-        i_avg = get_average_expense_by_category_and_period(category, start, end)
-        d = {"sum": i_sum, "min": i_min, "max": i_max, "avg": i_avg}    
-        return d
+def get_balance():
+    income = get_sum_of_incomes()
+    expense = get_sum_of_expenses()
+    return income - expense
     
-    def get_expense_by_category_and_period(category: str, start: datetime, end: datetime):
-        e_sum = get_sum_of_expenses_by_category_and_period(category, start, end)
-        e_min = get_min_expense_by_category_and_period(category, start, end)
-        e_max = get_max_expense_by_category_and_period(category, start, end)
-        e_avg = get_average_expense_by_category_and_period(category, start, end)
-        d = {"sum": e_sum, "min": e_min, "max": e_max, "avg": e_avg}    
-        return d
+def clear_balance():
+    delete_all_incomes()
+    delete_all_expenses()       
+    return True
+    
+def get_journal_by_category(in_category: str):
+    c = get_by_title(in_category,category)
+    ex = get_sum_of_expenses_by_category(c)
+    inc = get_sum_of_incomes_by_category(c)
+    d = {"expense": ex, "income": inc}
+    return d
+    
+def get_income_by_category_and_period(in_category: str, start: datetime, end: datetime):
+    c = get_by_title(in_category,category)
+    i_sum = get_sum_of_incomes_by_category_and_period(c, start, end)
+    i_min = get_min_income_by_category_and_period(c, start, end)
+    i_max = get_max_income_by_category_and_period(c, start, end)
+    i_avg = get_average_expense_by_category_and_period(c, start, end)
+    d = {"sum": i_sum, "min": i_min, "max": i_max, "avg": i_avg}    
+    return d
+    
+def get_expense_by_category_and_period(in_category: str, start: datetime, end: datetime):
+    c = get_by_title(in_category,category)
+    e_sum = get_sum_of_expenses_by_category_and_period(c, start, end)
+    e_min = get_min_expense_by_category_and_period(c, start, end)
+    e_max = get_max_expense_by_category_and_period(c, start, end)
+    e_avg = get_average_expense_by_category_and_period(c, start, end)
+    d = {"sum": e_sum, "min": e_min, "max": e_max, "avg": e_avg}    
+    return d
 
