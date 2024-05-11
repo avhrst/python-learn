@@ -2,6 +2,7 @@
 
 dataset: https://www.kaggle.com/datasets/iabhishekofficial/mobile-price-classification
 
+
 - Створити проект, створити віртуальне оточення, створити репозиторій
 - Завантажити данні в папку data
 - Створити EDA jupyter notebook. Тут має бути аналіз датасету з графіками
