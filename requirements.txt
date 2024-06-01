@@ -1,8 +1,7 @@
---find-links https://download.pytorch.org/whl/cu121
+pandas
+sklearn
+seaborn
+--extra-index-url https://download.pytorch.org/whl/cu121
 torch
 torchvision
 torchaudio 
-numpy
-pandas
-sklearn
-matplotlib
